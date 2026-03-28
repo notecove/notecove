@@ -8,58 +8,9 @@ pinned: false
 
 Starts the day by creating a new notecove note with a date heading and compiling a fresh todo list from recent notes, as well as the Regular TODO board.
 
-# Notecove CLI Reference
+# Notecove Configuration
 
-All note/task access goes through the `notecove` CLI. Key commands:
-
-**List notes in a folder:**
-```bash
-notecove note list --folder <folder-id> --json
-```
-
-**Read a note's content:**
-```bash
-notecove note show <note-id> --format markdown
-```
-
-**Create a new note:**
-```bash
-notecove note create --folder <folder-id> --content "..." --format markdown --json
-```
-
-**Append to an existing note:**
-```bash
-notecove note edit <note-id> --append "..." --format markdown
-```
-
-**Replace a note's content:**
-```bash
-notecove note edit <note-id> --content "..." --format markdown
-```
-
-**List tasks from a project:**
-```bash
-notecove task list --project <slug-prefix> --json
-# e.g. --project TODO, --project NOTE
-```
-
-**Filter tasks by state:**
-```bash
-notecove task list --project TODO --state "In Progress" --json
-```
-
-**Show task details (including ID for linking):**
-```bash
-notecove task show <slug> --json
-# .id and .title fields give you what you need for a task link
-```
-
-## Notecove Link Syntax
-
-Always use these forms — never plain slug text or `N:` prefix for notes:
-
-- **Tasks:** `[[T:<long-id>|display title]]` — long-id from `notecove task show <slug> --json` → `.id`
-- **Notes:** `[[<note-id>|display title]]` — just the bare note ID, no prefix
+Run `notecove agent-instructions` for link syntax, JSON field names, and stdin patterns.
 
 ## Folder IDs
 
