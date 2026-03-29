@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(notecove agent-instructions:*)",
+      "Bash(find /Users/drew/devel/notecove-1/website/public/images -type f -name *.png -o -name *.svg -o -name *.jpg -o -name *.webp)"
+    ]
+  }
+}
