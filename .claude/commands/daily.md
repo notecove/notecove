@@ -4,9 +4,11 @@ folder: /Inbox
 modified: 1773597754515
 pinned: false
 ---
-# Drew's Daily Skill
+# Daily Skill
 
 Starts the day by creating a new notecove note with a date heading and compiling a fresh todo list from recent notes, as well as the Regular TODO board.
+
+> Based on an idea and initial implementation by [Ville Hellman](https://github.com/efexen).
 
 # Notecove Configuration
 

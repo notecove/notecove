@@ -16,6 +16,8 @@ This repo contains Claude Code skills that integrate directly with your NoteCove
 
 Starts your day by compiling a fresh daily note in NoteCove: pulls outstanding todos from recent notes, reads active tasks from your projects, checks your calendar and the weather, scans open PRs, and writes a prioritized action list with a short coaching brief.
 
+Based on an idea and initial implementation by [Ville Hellman](https://github.com/efexen).
+
 **Install:** run `/daily-installation` once to configure the skill for your NoteCove folders and projects.
 
 ---
