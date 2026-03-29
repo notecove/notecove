@@ -26,6 +26,10 @@ Based on an idea and initial implementation by [Ville Hellman](https://github.co
 
 A structured, multi-phase workflow for implementing features against a NoteCove codebase. Guides Claude through analysis, planning, critique, and implementation — tracking everything as Notecove notes and tasks.
 
+The framework and philosophy behind it are described in these posts (written before the NoteCove variant existed, but the ideas carry over directly):
+- [The feature command](https://drew.thecsillags.com/posts/2026-01-29-feature-command/)
+- [Further narrowing](https://drew.thecsillags.com/posts/2026-02-27-further-narrowing/)
+
 **Watch it in action:**
 
 [![feature-nc demo](https://img.youtube.com/vi/SAmejhaNZxk/maxresdefault.jpg)](https://www.youtube.com/watch?v=SAmejhaNZxk)

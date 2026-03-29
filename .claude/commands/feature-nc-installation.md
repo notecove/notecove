@@ -4,6 +4,7 @@ allowed-tools:
   - Read
   - Bash(nc_canary=1 notecove folder *)
   - Bash(nc_canary=1 notecove project *)
+  - Bash(cp * ~/.claude/commands/)
 ---
 
 # Feature-NC Skill Installation
@@ -72,10 +73,23 @@ Do not change any other content.
 
 If both match the defaults, no edit is needed — report that the file is already configured correctly.
 
-### 7. Report
+### 7. Offer to copy to ~/.claude/commands
+
+Ask the user: "Copy `feature-nc.md` and `feature-nc-installation.md` to `~/.claude/commands/` so the skills are available globally?"
+
+If yes:
+```bash
+cp feature-nc.md feature-nc-installation.md ~/.claude/commands/
+```
+(Run from the same directory as this file.)
+
+If no, skip.
+
+### 8. Report
 
 Tell the user:
 - Ticket-source project: slug prefix + name
 - Implementation-task project: slug prefix + name (note if created)
 - Claude parent folder: exists or will be auto-created on first run
 - Whether `feature-nc.md` was patched or was already correct
+- Whether the skill files were copied to `~/.claude/commands/`

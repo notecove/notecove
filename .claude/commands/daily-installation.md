@@ -6,6 +6,7 @@ allowed-tools:
   - Bash(nc_canary=1 notecove project *)
   - Bash(nc_canary=1 notecove note list *)
   - Bash(ls ~/daily/backup-notecove.sh)
+  - Bash(cp * ~/.claude/commands/)
 ---
 
 # Daily Skill Installation
@@ -78,10 +79,23 @@ If missing: warn "⚠️  ~/daily/backup-notecove.sh not found — Step 1 of the
 
 Read the `daily.md` skill file (same directory as this file). Update the Folder IDs table with the IDs discovered or created above. Use the Edit tool to replace each ID cell precisely — do not rewrite surrounding content.
 
-### 7. Report
+### 7. Offer to copy to ~/.claude/commands
+
+Ask the user: "Copy `daily.md` and `daily-installation.md` to `~/.claude/commands/` so the skills are available globally?"
+
+If yes:
+```bash
+cp daily.md daily-installation.md ~/.claude/commands/
+```
+(Run from the same directory as this file.)
+
+If no, skip.
+
+### 8. Report
 
 Tell the user:
 - Which folders were found vs created (with IDs)
 - Which projects were found vs missing
 - Whether the backup script exists
 - Confirmation that `daily.md` has been patched (or that no changes were needed because IDs already matched)
+- Whether the skill files were copied to `~/.claude/commands/`
