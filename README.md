@@ -8,6 +8,8 @@
 
 This repo contains Claude Code skills that integrate directly with your NoteCove instance.
 
+**Before starting:** You'll need to install the CLI and authenticating the CLI with your NoteCove profile. See the Initializing Access of the [CLI Documentation](https://notecove.io/docs/features/cli/) or watch the [video](https://www.youtube.com/watch?v=BimxhrMzk9U) that walks you through it.
+
 ---
 
 ## Skills
