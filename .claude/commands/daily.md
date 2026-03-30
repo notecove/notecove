@@ -64,7 +64,7 @@ List and read all notes in the Claude memory folder (`ppaaekyxd7a293wgep4w09v56m
 notecove note list --folder ppaaekyxd7a293wgep4w09v56m --json
 ```
 
-Read each note's content. These notes contain observations about Drew's patterns, tendencies, and context that aren't derivable from tasks or recent daily notes — things like energy patterns, what kinds of tasks tend to get stuck, what framing works, what doesn't. Use them to inform:
+Read each note's content. These notes contain observations about your patterns, tendencies, and context that aren't derivable from tasks or recent daily notes — things like energy patterns, what kinds of tasks tend to get stuck, what framing works, what doesn't. Use them to inform:
 - The tone and emphasis of the Daily Brief
 - Which items to surface in the top-3
 - How to frame first steps (e.g. if a pattern says "big tasks don't happen, small ones do")
@@ -120,7 +120,7 @@ Include a `## Schedule` section in today's note listing each event with its time
 Fetch today's forecast for Glen Cove, NY:
 
 ```bash
-curl -s "wttr.in/Glen+Cove,NY?format=j1" | python3 -c "import sys,json; d=json.load(sys.stdin); print(d['weather'][0]['maxtempF'])"
+curl -s "wttr.in/New+York,NY?format=j1" | python3 -c "import sys,json; d=json.load(sys.stdin); print(d['weather'][0]['maxtempF'])"
 ```
 
 If the forecasted high is **over 45°F**, include this as a standalone H1 in the note, placed right after the date heading and cruise countdown line:
@@ -265,7 +265,7 @@ If the note was just created, write the full content. If it already existed and 
 
 ---
 
-## Drew's Notes
+## My Notes
 
 **How are you feeling today?**
 
@@ -275,7 +275,7 @@ If the note was just created, write the full content. If it already existed and 
 ```
 
 Notes on structure:
-- `## Drew's Notes` goes **at the end** — it's a diary section
+- `## My Notes` goes **at the end** — it's a diary section
 - `### Medical` always present, all active medical items, mandatory
 - `### Today's 10 — pick one` — ordered by value + actionability, max 10 items, each atomic
 - Big tasks decomposed to their smallest action; NM tasks capped at 2–3
@@ -301,9 +301,9 @@ After writing today's note, update the Claude memory folder (`ppaaekyxd7a293wgep
 
 Good things to record or update:
 - **Patterns in stuck tasks** — what keeps not getting done and why (e.g. "tasks without a named first step don't happen")
-- **Energy / mood patterns** — what recent daily notes reveal about Drew's energy, rhythm, or motivation
+- **Energy / mood patterns** — what recent daily notes reveal about energy, rhythm, or motivation
 - **What's working** — if a framing or format seemed right, note it so future runs can lean into it
-- **Meta-observations** — anything about how Drew thinks, what tends to motivate or drain him, what kinds of prompts actually get used
+- **Meta-observations** — anything about how you think, what tends to motivate or drain you, what kinds of prompts actually get used
 
 Each topic should be its own note in the folder (e.g. "Patterns — stuck tasks", "Job search context", "Energy observations"). Create new notes for new topics; update existing notes rather than duplicating.
 

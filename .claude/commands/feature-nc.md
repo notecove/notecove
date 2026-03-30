@@ -24,22 +24,15 @@ allowed-tools:
 ## Setup
 
 0. **Check if argument is a Notecove task reference:**
-   - If `$ARGUMENTS` matches the pattern `NOTE-{something}` (or contains a reference like "see NOTE-{something}"), treat it as a Notecove task ID
-   - Read the task: `notecove task show $ARGUMENTS --project NOTE --json` — use the full argument as-is (e.g., `NOTE-rrd`), do NOT strip the prefix or extract just the short part
+   - If `$ARGUMENTS` matches the pattern `{PREFIX}-{something}` (e.g. `NOTE-rrd`, `TODO-42`, `PROJ-abc`) treat it as a Notecove task slug
+   - Extract the project prefix (everything before the first `-`) and read the task: `notecove task show $ARGUMENTS --project {PREFIX} --json` — use the full argument as-is, do NOT strip the prefix or extract just the short part
    - The task body is your actual feature description — use it as the basis for deriving the slug and all subsequent steps
    - Always read both `title` and the body content (from `contentJson.content` or the plain-text `contentText`) since the title alone may not contain everything you need
-   - **Read the task type** from the `typeName` field in the JSON and use it as a lens for the whole session. Examples:
-     - `cli` — scope is `packages/cli`; don't plan desktop or iOS work unless the body explicitly calls for it
-     - `desktop` — scope is `packages/desktop`; same constraint
-     - `ios` — scope is `packages/ios`; same constraint
-     - `crdt` — the ticket is about sync/data correctness; read the relevant storage ADRs before planning, and weight testing strategies toward crdt-inspection and multi-instance scenarios
-     - `performance` — the ticket is about speed or efficiency; establish a baseline measurement before touching code, and validate against it
-     - `null` / no type — no constraint; use judgment from the task body
-       The type won't always map cleanly to a rule — use it as a signal to understand _what kind of work this is_ and plan accordingly.
-   - **Mark as Doing immediately:** if the task state is not already `Doing`, run `notecove task change $ARGUMENTS --state "Doing" --project NOTE` — this prevents `/feature-next` from offering the same ticket to another worker
-   - **Tag with worktree:** detect the current worktree name by running `git worktree list` and matching against `pwd`. Use the directory basename as the identifier (e.g. `notecove-3-wt2` → `wt2`, or just the full basename if short). Append `#wt-{name}` to the task description via `notecove task change $ARGUMENTS --content "$(existing content) #wt-{name}" --project NOTE`. This makes the active worktree visible when viewing the task on phone or kanban. Remove the tag when the session completes (Phase 4 done).
+   - **Read the task type** from the `typeName` field in the JSON and use it as a lens for the whole session — it signals what kind of work this is (e.g. a `performance` type means establish a baseline before touching code). If `typeName` is null or absent, use judgment from the task body.
+   - **Mark as Doing immediately:** if the task state is not already `Doing`, run `notecove task change $ARGUMENTS --state "Doing" --project {PREFIX}` — this prevents `/feature-next` from offering the same ticket to another worker
+   - **Tag with worktree:** detect the current worktree name by running `git worktree list` and matching against `pwd`. Use the directory basename as the identifier. Append `#wt-{name}` to the task description via `notecove task change $ARGUMENTS --content "$(existing content) #wt-{name}" --project {PREFIX}`. This makes the active worktree visible when viewing the task on phone or kanban. Remove the tag when the session completes (Phase 4 done).
 1. Derive a kebab-case slug from the task description (e.g., "rename an SD" → `rename-sd`)
-2. Create and checkout git branch: `{slug}`. If `$ARGUMENTS` was a `NOTE-*` reference, `begin-change` will have pre-created a placeholder branch named after the ticket (e.g. `NOTE-hkz6`) to mark the worktree as in-use. After `git checkout -b {slug}` succeeds, delete the placeholder: `git branch -d {ticket-name}` (e.g. `git branch -d NOTE-hkz6`).
+2. Create and checkout git branch: `{slug}`. If `$ARGUMENTS` was a task slug reference, `begin-change` may have pre-created a placeholder branch named after the ticket to mark the worktree as in-use. After `git checkout -b {slug}` succeeds, delete the placeholder if it exists: `git branch -d {ticket-name}`.
 3. **Create Notecove folder structure:**
    - Run `notecove folder list --json` and parse the output to find a folder named `Claude`
    - If `Claude` folder does not exist, create it: `notecove folder create Claude --json` — parse the JSON output to get the folder ID
@@ -126,61 +119,46 @@ Your task is NOT to implement yet, but to fully understand and prepare.
 
 **Design Document Identification:**
 
-Identify which design documents are relevant to this feature. Check:
+Identify which design documents are relevant to this feature. Check common locations:
 
-- `ADR/` directory - Architecture Decision Records and implementation tenets
-- `website/technical_documents/` - Technical specifications
-- Other design docs mentioned in CLAUDE.md or the codebase
+- `ADR/` or `docs/adr/` — Architecture Decision Records and implementation tenets
+- `docs/` or `ARCHITECTURE.md` — Technical specifications and architecture overviews
+- Any design docs referenced in CLAUDE.md or the project README
+- Use an Explore subagent if unsure where design docs live in this project
 
 List relevant documents in the Questions note under a "Relevant Design Documents" section. These will be audited against in Phase 3.
 
-**Website Documentation Check:**
+**Design Document Context Check:**
 
-Before planning, check if this feature adds/removes/changes anything in the website's feature documentation (`website/features/`). If so:
-
-- Make "Update website documentation" an explicit item in the plan
-- If this is a **new feature**, ask the user: "Should this be added to the feature list on the website? It might not warrant inclusion."
-- Remember that feature lists are **per-platform** (desktop, iOS, Android) - features don't automatically apply to all platforms
-
-**ADR Context Check:**
-
-Before planning, check if this feature relates to documented architecture:
-
-- **Storage/CRDT/Sync work**: Read `ADR/storage/` for context on storage format, sync architecture
-- **Cross-SD operations**: Read `ADR/architecture/cross-sd-move-state-machine.md`
-- **IPC changes**: Read `ADR/integration/ipc-protocol.md`
-- **If unsure**: Use Explore subagent to determine which ADRs are relevant (results will be persisted automatically — see "Persisting Explore subagent results" above)
-- Note any architectural constraints or patterns that must be followed
+Before planning, use an Explore subagent to find design documents relevant to this feature's area (e.g. storage, networking, UI, data format). Read them and note any architectural constraints or patterns that must be followed.
 
 **Verification Plan:**
 
-Propose a verification strategy in the Questions note for the user to review and approve before planning begins. Consult `ADR/testing/README.md` for the full catalog of testing strategies.
+Propose a verification strategy in the Questions note for the user to review and approve before planning begins. Check the project for any existing testing documentation (e.g. `docs/testing/`, `ADR/testing/`, or a testing section in CLAUDE.md) to understand available strategies.
 
 Based on your analysis of the feature, answer the following questions and include your answers in the Questions note under a "Verification Strategy" section — the user will review and correct your proposal:
 
-1. **Does this feature involve sync/CRDT operations?**
-   - Yes → Suggest: multi-instance testing, sloppy-sync, crdt-inspection
+1. **Does this feature involve complex state, data correctness, or distributed operations?**
+   - Yes → Suggest integration or property-based tests; consider multi-instance or concurrency scenarios
    - No → Continue
 
-2. **Does this feature involve cross-machine scenarios?**
-   - Yes → Suggest: sloppy-sync (FileSyncSimulator), multi-instance testing
+2. **Does this feature change a data format, schema, or storage structure?**
+   - Yes → Suggest migration tests and format-compliance unit tests
    - No → Continue
 
-3. **Does this feature change storage format or CRDT structure?**
-   - Yes → Suggest: crdt-inspection, unit tests for format compliance
+3. **Is this primarily a UI feature?**
+   - Yes → Suggest end-to-end tests (e.g. Playwright, Cypress); consider visual regression testing
    - No → Continue
 
-4. **Is this primarily a UI feature?**
-   - Yes → Suggest: e2e-playwright, consider visual regression testing
+4. **Does this feature touch platform-specific code (mobile, desktop, server, CLI)?**
+   - Yes → Identify the relevant platform test strategy for this project and suggest it
    - No → Continue
 
-5. **Does this feature affect iOS?**
-   - Yes → Suggest: ios-testing (XCTest)
+5. **Does this feature affect a performance-sensitive path?**
+   - Yes → Suggest establishing a baseline measurement before changing code and validating against it
    - No → Continue
 
 Document your proposed strategies in the Questions note under a "Verification Strategy" section. The goal is to **maximize automation** and **minimize manual user verification**. The user must review and approve this strategy before planning begins.
-
-For each suggested strategy, reference the relevant doc in `ADR/testing/` for implementation patterns.
 
 **Important:**
 
@@ -395,20 +373,3 @@ Now implement precisely as planned, in full.
 
 **⏸ CHECKPOINT**: Pause before commits for user approval
 
----
-
-## Appendix: Platform Feature Tracking
-
-When updating website documentation, remember that features are **platform-specific**:
-
-| Platform | Status      | Feature List Location                            |
-| -------- | ----------- | ------------------------------------------------ |
-| Desktop  | Active      | `website/features/` (current)                    |
-| iOS      | Coming Soon | `website/features/ios/` (create when needed)     |
-| Android  | Planned     | `website/features/android/` (create when needed) |
-
-**Important:** When documenting a feature:
-
-- Clearly indicate which platform(s) it applies to
-- Don't assume a desktop feature will be available on mobile (or vice versa)
-- Update the appropriate platform-specific feature list(s)
