@@ -197,8 +197,10 @@ sessions.
    every exit**. Never leave it unarmed: missed events across a compaction
    are how a question sits unanswered for hours.
 2. **PR review scan**, a cron every 30 minutes:
-   `python3 <skill dir>/wt-manager-scripts/pr_review_scan.py {GH_REPO} && python3 <skill dir>/wt-manager-scripts/ready_section.py {STATE_NOTE_ID}`
-   (use `timeout 560`). It prints REVIEW (new human reviews), READY,
+   `BASE_BRANCH={BASE_BRANCH} python3 <skill dir>/wt-manager-scripts/pr_review_scan.py {GH_REPO} && python3 <skill dir>/wt-manager-scripts/ready_section.py {STATE_NOTE_ID}`
+   (use `timeout 560`). `pr_review_scan.py` only reads `BASE_BRANCH` from the
+   environment, not as an argument — set it or it silently assumes `main`.
+   It prints REVIEW (new human reviews), READY,
    STILL_READY and GONE (merged or closed), then rewrites the state note's
    `### Ready to merge`.
    - Tell the human about each change in plain language.
@@ -234,8 +236,9 @@ waiting. Make sure each waiting item has a TM ticket.
 
 ## `status`
 
-Run `wt_status.py`, list open TM tickets (`notecove task list --project TM --json`),
-and render:
+Run `python3 <skill dir>/wt-manager-scripts/wt_status.py --base-branch {BASE_BRANCH} --repo {GH_REPO}`
+(drop `--repo` if you left `{GH_REPO}` blank during installation), list open
+TM tickets (`notecove task list --project TM --json`), and render:
 
 1. **Waiting on you**: open TM tickets grouped by type, with apply and decide
    first, then review tickets in priority order. One line each, with its age.
