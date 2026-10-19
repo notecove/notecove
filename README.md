@@ -40,11 +40,21 @@ The framework and philosophy behind it are described in these posts (written bef
 
 ---
 
+### `/wt-manager` — Worktree manager
+
+Runs as its own Claude Code agent alongside a fleet of other agents working in sibling git worktrees. Watches each worktree's state and open PRs, and turns everything that needs a human — a question, a plan to approve, a PR to review, a production deploy to run — into a ticket in a dedicated NoteCove project ("TM," for "To Me"), instead of interrupting you directly. Also dispatches queued tickets into whichever worktree frees up next.
+
+Ships with background scripts (`wt-manager-scripts/`) for watching TM for your replies, scanning PR reviews, and keeping a "ready to merge" note current.
+
+**Install:** run `/wt-manager-installation` once to bootstrap the TM project and its states/types, and configure the skill for your NoteCove instance.
+
+---
+
 ## Installation
 
 1. Clone this repo somewhere on your machine:
    ```bash
-   git clone https://github.com/drewcsillag/evoceton.git
+   git clone https://github.com/notecove/notecove.git evoceton
    cd evoceton
    ```
 
@@ -56,6 +66,7 @@ The framework and philosophy behind it are described in these posts (written bef
 3. Run the installation skill for each skill you want to use:
    - `/daily-installation` — sets up the daily skill
    - `/feature-nc-installation` — sets up the feature workflow skill
+   - `/wt-manager-installation` — sets up the worktree manager skill
 
 The installation skills will discover or create the required NoteCove folders and projects, and patch the skill files with the correct IDs for your instance.
 
