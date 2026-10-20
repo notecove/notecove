@@ -1,2 +1,7 @@
 .notecove
 .claude/settings.local.json
+__pycache__/
+.claude/commands/wt-manager-scripts/tm_state.json
+.claude/commands/wt-manager-scripts/pr_review_state.json
+.claude/commands/wt-manager-scripts/ready_note.md
+.claude/commands/wt-manager-scripts/nudges.log
